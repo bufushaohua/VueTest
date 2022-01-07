@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件基础</title>
+</head>
+<body>
+
+<div id="app">
+    <button-counter></button-counter>
+</div>
+
+<div id="blog-posts-events-demo">
+    <div :style="{fontSize: postFontSize + 'em'}">
+        <blog-post v-for="post of posts" :key="post.id" :post="post" @enlarge="postFontSize += 0.1" @decrease="postFontSize -= $event"></blog-post>
+    </div>
+    <custom-input :value="searchText" @input="searchText = $event" ></custom-input>
+    <!--<custom-input v-model="searchText"></custom-input>-->
+    <input type="text" onblur="console.log('11')">
+    <br>
+
+    <alert-box>
+        Bad Smell!
+    </alert-box>
+</div>
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    // 定义一个名为 button-counter 的新组件
+    Vue.component('button-counter',{
+        data: function () {
+            return {
+                count: 0,
+            }
+        },
+        template: '<button @click="count++" >You clicked me {{count}} times.</button>'
+    });
+    // $emit 是触发当前组件的事件
+    Vue.component('blog-post', {
+        props: ['post'],
+        template: '\
+            <div>\
+                <h3>{{post.title}}</h3>\
+                <button @click="$emit(\'enlarge\')">\
+                    Enlarge text\
+                </button>\
+                <button @click="$emit(\'decrease\', 0.1)">\
+                    Decrease text\
+                </button>\
+            </div>'
+    });
+    Vue.component('custom-input',{
+        props: ['value'],
+        template: '\
+        <input\
+            :value="value"\
+            @input="$emit(\'input\', $event.target.value)"\
+            onblur="console.log(this.searchText)" \
+        >'
+    });
+
+    Vue.component('alert-box', {
+        template: '\
+            <div class="demo-alert-box">\
+                <strong>Error!</strong>\
+                <slot></slot>\
+            </div>'
+    });
+
+    let vm = new Vue({
+        el: "#app",
+        data: {
+
+        }
+    });
+
+    let vm1 = new Vue({
+        el: '#blog-posts-events-demo',
+        data: {
+            posts: [
+                {id: 1, title: "what happen it ?"},
+                {id: 2, title: "谁都只得那双手靠拥抱亦难任你拥有"},
+                {id: 3, title: "要拥有必先懂失去怎接受"},
+            ],
+            postFontSize: 1,
+            searchText: ""
+        }
+    });
+
+</script>
+
+</html>

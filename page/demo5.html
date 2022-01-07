@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title5</title>
+</head>
+<body>
+    <div id="example-1">
+        <ul>
+            <li v-for="item in items" :key="item.message">
+                {{ item.message }}
+            </li>
+        </ul>
+        <ul>
+            <li v-for="(item, index) of items" :key="item.age">
+                {{index}}: {{ item.message }}
+            </li>
+        </ul>
+
+        <li v-for="n in evenNumbers">{{n}}</li>
+
+        <ul v-for="set in sets">
+            <li v-for="n in even(set)">{{n}}</li>
+        </ul>
+
+        <span v-for="n in 10">{{n}}</span>
+    </div>
+
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    let example1 = new Vue({
+        el: "#example-1",
+        data: {
+            items: [
+                {"message": 'Foo', "age": '23'},
+                {"message": 'Bar', "age": '26'}
+            ],
+            sets: [[1, 2, 3, 4, 5],[6, 7, 8, 9, 10]],
+            numbers: [1, 2, 3, 4, 5]
+        },
+        computed: {
+            evenNumbers: function () {
+                return this.numbers.filter(number => number%2 === 0 )
+            }
+        },
+        methods: {
+            even: function (numbers) {
+                return numbers.filter(number => number%2 === 0);
+            }
+        }
+    })
+</script>
+
+</html>
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title6</title>
+</head>
+<body>
+
+<div id="app">
+    <form action="" @submit.prevent="addNewTodo">
+        <label for="new-todo"> Add a todo</label>
+        <input type="text" v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat">
+        <button>Add</button>
+    </form>
+    <!--is的属性引入是为了解决dom结构中对放入html的元素有限制的问题-->
+    <ul>
+        <li is="todo-item" v-for="(todo, index) in todos" :key="todo.id" :title="todo.title" @remove="todos.splice(index, 1)"></li>
+    </ul>
+
+    <button @click="greet">Greet</button>
+
+    <button @click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+
+    <input id="input1" type="text" @keyup.page-down="submit($event)">
+
+</div>
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    // 注册组件最好在最开始
+    Vue.component('todo-item', {
+        template: '\
+            <li>\
+                {{title}}\
+                <button @click="$emit(\'remove\')">Remove</button>\
+            </li>\
+            ',
+        props: ['title']
+    });
+
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            name: 'Vue.js',
+            newTodoText: "",
+            todos: [
+                {
+                    id: 1,
+                    title: "Do the dishes",
+                },
+                {
+                    id: 2,
+                    title: "Take out the trash",
+                },
+                {
+                    id: 3,
+                    title: "Mow the lawn",
+                },
+            ],
+            nextTodoId: 4
+        },
+        methods: {
+            addNewTodo: function () {
+                this.todos.push({
+                    id: this.nextTodoId++,
+                    title: this.newTodoText
+                });
+                this.newTodoText = ""
+            },
+            greet: function (event) {
+                // this指当前的Vue实例
+                alert('Hello ' + this.name);
+                // event是原生DOM事件
+                if(event){
+                    alert(event.target.tagName);
+                }
+            },
+            warn: function (message, event) {
+                // 现在可以访问原生事件对象
+                if(event){
+                    event.preventDefault();
+                }
+                alert(message);
+                console.log("-----返回信息-----", message);
+            },
+            submit: function (event) {
+                alert(document.getElementById("input1").value);
+            }
+        }
+    })
+
+
+
+</script>
+
+</html>
