@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>进入/离开 & 列表过渡</title>
+</head>
+<body>
+
+<div id="app">
+    <transition name="fade">
+        <p v-if="show">Hello, Vue!</p>
+    </transition>
+    <button @click="show = !show">
+        请点击
+    </button>
+</div>
+
+<div id="app1">
+    <button @click="show = !show">请点击按钮</button>
+    <transition name="slide-fade">
+        <p v-if="show">Hello P标签</p>
+    </transition>
+</div>
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    new Vue({
+       el: '#app',
+       data: {
+           show: true
+       }
+    });
+
+    new Vue({
+        el: '#app1',
+        data: {
+            show: true,
+        }
+    });
+
+</script>
+
+<style>
+    /*v-enter-active  v-leave-active*/
+    /*opacity： 透明度*/
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.5s;
+    }
+    /*fade-leave-active 在2.1.8版本之下*/
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+    /*ease表示慢速结束过渡效果*/
+    .slide-fade-enter-active {
+        transition: all 0.3s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all 5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to{
+        transform: translateX(100px) translateY(-50px);
+        opacity: 0;
+    }
+
+</style>
+
+</html>

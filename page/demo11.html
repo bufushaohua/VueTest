@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态异步&异步组件</title>
+</head>
+<body>
+
+<div id="dynamic-demo">
+    <!--<button class="dynamic-demo-button dynamic-demo-active">Posts</button>-->
+    <!--<button class="dynamic-demo-button dynamic-demo-active">Archive</button>-->
+    <button v-for="tab in tabs"
+            :key="tab"
+            :class="['tab-button', {active: currentTab === tab}]"
+            @click="currentTab = tab">
+        {{tab}}
+    </button>
+    <component :is="currentTabComponent" class="tab"></component>
+    <!--<div class="dynamic-demo-tab">-->
+    <!--    <ul class="dynamic-demo-sidebar">-->
+    <!--        <li>鲁迅</li>-->
+    <!--        <li>毛泽东</li>-->
+    <!--        <li>陈独秀</li>-->
+    <!--    </ul>-->
+    <!--    <div class="dynamic-demo-container">-->
+    <!--        <strong>点击博客标题浏览</strong>-->
+    <!--    </div>-->
+    <!--</div>-->
+
+</div>
+
+
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    Vue.component("tab-posts", {
+        data() {
+            return {
+                posts: [
+                    {
+                        id: 1,
+                        title: '鲁迅简介',
+                        content: '\
+                            <p>\
+                                鲁迅（1881年9月25日～1936年10月19日），原名周樟寿，后改名周树人，字豫山，后改字豫才，浙江绍兴人。著名文学家、思想家、革命家、教育家 [179]  、民主战士，新文化运动的重要参与者，中国现代文学的奠基人之一。\
+早年与厉绥之和钱均夫同赴日本公费留学，于日本仙台医科专门学校肄业。 [183]  “鲁迅”，1918年发表《狂人日记》时所用的笔名，也是最为广泛的笔名。 [1-7] \
+鲁迅一生在文学创作、文学批评、思想研究、文学史研究、翻译、美术理论引进、基础科学介绍和古籍校勘与研究等多个领域具有重大贡献。他对于五四运动以后的中国社会思想文化发展具有重大影响，蜚声世界文坛，尤其在韩国、日本思想文化领域有极其重要的地位和影响，被誉为“二十世纪东亚文化地图上占最大领土的作家”。 [8-10] \
+毛泽东曾评价：“鲁迅的方向，就是中华民族新文化的方向。”\
+                            </p>\
+                        '
+                    },
+                    {
+                        id: 2,
+                        title: '毛泽东简介',
+                        content: '\
+                            <p>\
+                                毛泽东（1893年12月26日-1976年9月9日），字润之（原作咏芝，后改润芝），笔名子任。湖南湘潭人。中国人民的领袖，伟大的马克思主义者，伟大的无产阶级革命家 [23]  、战略家、理论家，中国共产党、中国人民解放军和中华人民共和国的主要缔造者和领导人，马克思主义中国化的伟大开拓者，近代以来中国伟大的爱国者和民族英雄，中国共产党第一代中央领导集体的核心，领导中国人民彻底改变自己命运和国家面貌的一代伟人 [16]  [23]  。\
+1949至1976年，毛泽东担任中华人民共和国最高领导人。他对马克思列宁主义的发展、军事理论的贡献以及对共产党的理论贡献被称为毛泽东思想。因毛泽东担任过的主要职务几乎全部称为主席，所以也被人们尊称为“毛主席”。\
+毛泽东被视为现代世界历史中最重要的人物之一，《时代》杂志也将他评为20世纪最具影响100人之一。\
+                            </p>\
+                        '
+                    },
+                    {
+                        id: 3,
+                        title: '陈独秀简介',
+                        content: '\
+                            <p>\
+                                陈独秀（1879年10月9日-1942年5月27日），原名陈庆同 [1]  ，陈乾生，字仲甫，号实庵，安徽怀宁人 [1]  ，新文化运动的倡导者、发起者和主要旗手，“五四运动的总司令”，中国共产党的主要创始人之一和党早期主要领导人。\
+1920年，在上海建立中国共产党发起组，进行建党活动。1921年7月，在上海举行的中国共产党第一次全国代表大会上，被选为中央局书记。1925年领导五卅运动。在第一次国内革命战争后期，犯了严重的右倾投降主义路线错误，使革命遭到失败。1927年，在中共“八七”会议上被撤消总书记职务。其后，他坚持城市为中心的国民会议运动和工人运动，反对农村武装斗争，组织托派组织。1929年11月，被开除出中国共产党。后在上海建立托派组织“无产者社”，出版《无产者》刊物，宣传托派观点。抗战爆发后，拥护国共合作和国民党领导抗日，与托派中央决裂。1938年，被王明、康生诬陷为日本间谍。1942年5月，于四川江津病逝。 [20] \
+主要著作收入《独秀文存》、《陈独秀文章选编》等。 [20] \
+                            </p>\
+                        '
+                    }
+                ],
+                selectedPost: null
+            }
+        },
+        template: '\
+            <div class="dynamic-demo-tab">\
+                <ul class="dynamic-demo-sidebar">\
+                    <li\
+                        v-for="post in posts"\
+                        :key="post.id"\
+                        :class="{\'dynamic-demo-active\': post === selectedPost}"\
+                        @click="selectedPost = post">\
+                        {{post.title}}\
+                    </li>\
+                </ul>\
+                <div class="dynamic-demo-container">\
+                    <div v-if="selectedPost"\
+                        class="dynamic-demo-post">\
+                        <h3>{{selectedPost.title}}</h3>\
+                        <div v-html="selectedPost.content"></div>\
+                     </div>\
+                     <strong v-else>\
+                        请选择左边相应的博客标题浏览博客\
+                     </strong>\
+                </div>\
+            </div>\
+        '
+    });
+
+    Vue.component('tab-archive',{
+        template: '\
+            <div>Archive component</div>\
+        '
+    });
+
+    new Vue({
+        el: '#dynamic-demo',
+        data: {
+            currentTab: 'Posts',
+            tabs: ['Posts', 'Archive']
+        },
+        computed: {
+            currentTabComponent: function () {
+                return 'tab-'+ this.currentTab.toLowerCase();
+            }
+        },
+        methods: {
+            btnClick: function (){
+                if(this.loginType === 'username'){
+                    this.loginType = 'email';
+                }else {
+                    this.loginType = 'username';
+                }
+                // return this.loginType = this.loginType === 'username' ? 'email' : 'username';
+            }
+        }
+    })
+
+</script>
+<style>
+    .dynamic-demo-button {
+        padding: 6px 10px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        background: #f0f0f0;
+        margin-bottom: -1px;
+        margin-right: -1px;
+        overflow-anchor: none;
+    }
+    .dynamic-demo-button:hover {
+        background: #e0e0e0;
+    }
+    .dynamic-demo-button.dynamic-demo-active {
+        background: #e0e0e0;
+    }
+    .dynamic-demo-tab {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .dynamic-demo-tab {
+        display: flex;
+    }
+    .dynamic-demo-sidebar {
+        max-width: 40vw;
+        margin: 0 !important;
+        padding: 0 10px 0 0 !important;
+        list-style-type: none;
+        border-right: 1px solid #ccc;
+    }
+    .dynamic-demo-sidebar li {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .dynamic-demo-sidebar li:hover {
+        background: #eee;
+    }
+    .dynamic-demo-sidebar li.dynamic-demo-active {
+        background: lightblue;
+    }
+    .dynamic-demo-container {
+        padding-left: 10px;
+    }
+    .dynamic-component-demo-post > :first-child {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+</style>
+
+</html>

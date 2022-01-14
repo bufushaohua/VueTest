@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>处理边界情况</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHbknPTCvUSgWwU0jJ68m4h6b7vpyP6hM"></script>
+</head>
+<body>
+    <div id="app">
+        <google-map>
+            <google-map-marker :places="vueConfCities"></google-map-marker>
+        </google-map>
+    </div>
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    Vue.component('google-map', {
+        data: function () {
+            return {
+                map: null
+            };
+        },
+        mounted: function () {
+            this.map = new google.maps.Map(this.$el, {
+                center: {lat: 0, lng: 0},
+                zoom: 1
+            });
+        },
+        methods: {
+            getMap: function (found) {
+                let vm = this;
+                function checkForMap() {
+                    if(vm.map){
+                        found(vm.map);
+                    }else {
+                        setTimeout(checkForMap, 50);
+                    }
+                }
+                checkForMap();
+            }
+        },
+        template: '<div class="map"><slot></slot></div>'
+    });
+
+    Vue.component('google-map-marker', {
+       props: ['places'],
+       created: function () {
+            let vm = this;
+            vm.$parent.getMap(function (map) {
+                vm.places.forEach(function (place) {
+                    new google.maps.Marker({
+                        position: place.position,
+                        map: map
+                    });
+                });
+            });
+       },
+        render: function (h) {
+            return null;
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            vueConfCities: [
+                {
+                    name: 'Wrocław',
+                    position:  {
+                        lat: 51.107885,
+                        lng: 17.038538
+                    }
+                },
+                {
+                    name: 'New Orleans',
+                    position: {
+                        lat: 29.951066,
+                        lng: -90.071532
+                    }
+                }
+            ]
+        }
+    })
+</script>
+</html>

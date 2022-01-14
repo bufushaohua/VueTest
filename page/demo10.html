@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>插槽</title>
+</head>
+<body>
+
+<div class="container">
+    <base-layout>
+        <template v-slot:header>
+            <h1>Here might be a page title</h1>
+        </template>
+
+        <p>A paragraph for the main content.</p>
+        <p>And another one.</p>
+
+        <template v-slot:footer>
+            <p>我是尾部</p>
+        </template>
+
+    </base-layout>
+</div>
+
+<div id="app">
+    <submit-button>whta</submit-button>
+
+    <current-user>
+        <!--slotProps名字任意，v-slot 默认为 v-slot:default 默认插槽，但不能具名插槽混用-->
+        <template v-slot="slotProps">
+            {{slotProps.user.firstName}}
+        </template>
+    </current-user>
+
+    <current-user #default="{user}">{{user.firstName}}</current-user>
+
+    <todo-list :todos="todos">
+        <template #todo="{todo}">
+            <span v-if="todo.isComplete">√</span>
+            <span v-else>×</span>
+            {{todo.title}}
+        </template>
+    </todo-list>
+
+</div>
+
+
+
+
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    Vue.component('submit-button', {
+       template: '\
+            <button type="submit">\
+                <slot>Submit2</slot>\
+            </button>\
+       '
+    });
+
+    Vue.component('base-layout', {
+        template: '\
+            <div class="container">\
+                <header>\
+                    <slot name="header"></slot>\
+                </header>\
+                <main>\
+                    <slot></slot>\
+                </main>\
+                <footer>\
+                    <slot name="footer"></slot>\
+                </footer>\
+            </div>\
+        '
+    });
+
+    Vue.component('current-user', {
+        // 组件的定义只接受 function
+        data() {
+            return {
+                user: {
+                    firstName: "我是姓",
+                    lastName: "我是名"
+                }
+            }
+        },
+        template: '\
+            <span>\
+                <slot :user="user">{{user.lastName}}</slot>\
+            </span>\
+        '
+    });
+
+    Vue.component('todo-list', {
+        props: ['todos'],
+        data() {
+            return {
+
+            }
+        },
+        template: '\
+            <ul>\
+                <li\
+                    v-for="todo in todos"\
+                    :key="todo.id">\
+                        <slot name="todo" :todo="todo">\
+                            {{todo.id}}\
+                        </slot>\
+                </li>\
+            </ul>\
+        '
+    });
+
+    let vm1 = new Vue({
+        el: ".container",
+        component: 'base-layout'
+    });
+
+    let vm = new Vue({
+        el: "#app",
+        component: ['submit-button', 'current-user', 'todo-list'],
+        data: {
+            todos: [
+                {
+                    id: 1,
+                    title: "Do the dishes",
+                    isComplete: false,
+                },
+                {
+                    id: 2,
+                    title: "Take out the trash",
+                    isComplete: true,
+                },
+                {
+                    id: 3,
+                    title: "Mow the lawn",
+                    isComplete: true,
+                }
+            ]
+        }
+    })
+
+</script>
+
+</html>
