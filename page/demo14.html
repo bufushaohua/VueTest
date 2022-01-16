@@ -23,18 +23,38 @@
 </div>
 
 <div id="app2">
-    <button @click="show != show">请点击这里</button>
+    <button @click="show = !show">请点击这里</button>
     <transition name="bounce">
         <p v-if="show">
-            p>表格中的数字表示支持该属性的第一个浏览器版本号。
-            紧跟在 -webkit-, -ms- 或 -moz- 前的数字为支持该前缀属性的第一个浏览器版本号
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Mauris facilisis enim libero, at lacinia diam fermentum id.
+            Pellentesque habitant morbi tristique senectus et netus.
         </p>
+    </transition>
+</div>
+
+<div id="app3">
+    <button @click="show = !show">自定义过渡的类名</button>
+    <transition
+        name="custom-classes-transition"
+        enter-acitve-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+    >
+        <p v-if="show">Hello 使用第三方CSS动画库 animate.css</p>
     </transition>
 </div>
 
 </body>
 <!--导入Vue.js-->
 <script src="../lib/vue.js"></script>
+<!--导入第三方动画库-->
+<!--链接式引入：推荐使用-->
+<link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+<!--<link rel="stylesheet" href="../node_modules/animate.css/animate.css" type="text/css">-->
+<!--导入式引用-->
+<!--<style type="text/css">-->
+<!--    @import "../lib/animate.min.css";-->
+<!--</style>-->
 <script>
     new Vue({
        el: '#app',
@@ -52,6 +72,13 @@
 
     new Vue({
         el: "#app2",
+        data: {
+            show: true
+        }
+    });
+
+    new Vue({
+        el: "#app3",
         data: {
             show: true,
         }
@@ -84,27 +111,28 @@
         bounce-in： 指animation-name属性 定义绑定到选择器的关键帧的名称
         reverse： 指animation-direction属性 定义是否循环交替反向播放动画
     */
-    .bounce-leave-active {
-        animation: bounce-in .5s reverse;
-    }
     .bounce-enter-active {
-        animation: bounce-in .5s;
+        -webkit-animation: bounce-in .5s;
     }
+    .bounce-leave-active {
+        -webkit-animation: bounce-in .5s reverse;
+    }
+
     /*
         @keyframes规则是能够创建动画， 将一套CSS样式逐渐变化为另一套样式
         通过百分比来规定改变发生的时间，或者关键字“from” 和 “to”，
         分别等价于 0%（动画的开始时间） 和 100%（动画的结束时间）
      */
-    @keyframes bounce-in {
+    @-webkit-keyframes bounce-in {
         0% {
             /*scale缩放当前绘图至更大或更小 1表示 100% */
-            transform: scale(0);
+            -webkit-transform: scale(0);
         }
         50% {
-            transform: scale(1.5);
+            -webkit-transform: scale(1.5);
         }
         100% {
-            transform: scale(1);
+            -webkit-transform: scale(1);
         }
     }
 
