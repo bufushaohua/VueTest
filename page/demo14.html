@@ -24,7 +24,7 @@
 
 <div id="app2">
     <button @click="show = !show">请点击这里</button>
-    <transition name="bounce">
+    <transition name="bounce" :duration="{enter: 3000, leave: 3000}">
         <p v-if="show">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Mauris facilisis enim libero, at lacinia diam fermentum id.
@@ -37,7 +37,7 @@
     <button @click="show = !show">自定义过渡的类名</button>
     <transition
         name="custom-classes-transition"
-        enter-acitve-class="animated tada"
+        enter-active-class="animated wobble"
         leave-active-class="animated bounceOutRight"
     >
         <p v-if="show">Hello 使用第三方CSS动画库 animate.css</p>
