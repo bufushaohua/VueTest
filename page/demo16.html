@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>混入</title>
+</head>
+<body>
+
+<div id="app">
+
+</div>
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+    let myMixin = {
+        created: function () {
+            this.hello();
+        },
+        methods: {
+            hello: function () {
+                console.log("hello from mixin!")
+            }
+        }
+    };
+
+    // 定义一个使用混入对象的组件
+    let Component = Vue.extend({
+        mixins: [myMixin]
+    });
+
+    let component = new Component();
+
+    let mixin = {
+        data: function () {
+            console.log("混入对象的data钩子被调用");
+            return {
+                message: 'hello',
+                foo: 'abc'
+            }
+        },
+        created: function () {
+            console.log("混入对象的created钩子被调用");
+        }
+    };
+
+    new Vue({
+        mixins: [mixin],
+        data: function () {
+            console.log("组件data钩子被调用");
+            return {
+                message: 'goodbye',
+                bar: 'def'
+            }
+        },
+        created: function () {
+            console.log("组件created钩子被调用");
+            console.log(this.$data);
+        }
+    });
+
+</script>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>自定义指令</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-focus_1>
+</div>
+
+<!--钩子函数参数-->
+<div id="hook-arguments-example" v-demo:foo.a.b.c="message"></div>
+<!--动态指令参数-->
+<div id="baseExample">
+    <p>Scroll down the page</p>
+    <p v-pin="200">Stick me 200px from the top of the page</p>
+</div>
+
+<div id="dynamicexample">
+    <h3>Scroll down inside this section↓</h3>
+    <p v-pin-1:[direction]="200">I am pinned onto the page at 200px to the left.</p>
+</div>
+
+<!--对象字面量-->
+<div v-demo-1="{color: 'white', text: 'hello!'}"></div>
+
+</body>
+<!--导入Vue.js-->
+<script src="../lib/vue.js"></script>
+<script>
+
+    // 注册一个全局自定义指令 'v-focus'
+    Vue.directive('focus', {
+        // 指令定义对象可以提供三个钩子函数: bind  inserted  update
+        inserted: function (el) {
+            // 聚焦元素
+            el.focus()
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+
+        },
+        directives: {
+            focus_1: {
+                // 指令的定义
+                inserted: function (el) {
+                    el.focus();
+                }
+            }
+        }
+    });
+
+    // 钩子函数参数
+    Vue.directive('demo',{
+        bind: function (el, binding, vnode) {
+            let s = JSON.stringify;
+            el.innerHTML =
+                'name: '+ s(binding.name) + '<br>' +
+                'value: '+ s(binding.value) + '<br>' +
+                'expression: '+ s(binding.expression) + '<br>' +
+                'argument: '+ s(binding.arg) + '<br>' +
+                'modifiers: '+ s(binding.modifiers) + '<br>' +
+                'vnode keys: '+ Object.keys(vnode).join(', ')
+        }
+    });
+    new Vue({
+        el: '#hook-arguments-example',
+        data: {
+            message: 'hello, hook function!'
+        },
+    });
+
+    // 动态指令参数
+    Vue.directive('pin', {
+        bind: function (el, binding, value) {
+            el.style.position = 'fixed';
+            el.style.top = binding.value + 'px';
+        }
+    });
+    new Vue({
+        el: '#baseExample'
+    });
+    Vue.directive('pin-1', {
+        bind: function (el, binding, vnode) {
+            el.style.position = 'fixed';
+            let s = (binding.arg == 'left' ? 'left' : 'top');
+            el.style[s] = binding.value + 'px'
+        }
+    });
+    new Vue({
+        el: '#dynamicexample',
+        data: function () {
+            return {
+                direction: 'left'
+            }
+        }
+    });
+
+    // bind和update触发相同行为，而不关心其它的钩子
+    Vue.directive('color-swatch', function (el, binding) {
+        el.style.backgroundColor = binding.value;
+    });
+
+    // 对象字面量
+    Vue.directive('demo-1', function (el, binding) {
+        console.log(binding.value.color);
+        console.log(binding.value.text);
+    })
+
+</script>
+
+</html>
