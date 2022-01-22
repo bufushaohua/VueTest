@@ -22,7 +22,7 @@
 </div>
 
 <!--对象字面量-->
-<div v-demo-1="{color: 'white', text: 'hello!'}"></div>
+<div v-demo_1="{color: 'white', text: 'hello!'}"></div>
 
 </body>
 <!--导入Vue.js-->
@@ -105,7 +105,7 @@
     });
 
     // 对象字面量
-    Vue.directive('demo-1', function (el, binding) {
+    Vue.directive('demo_1', function (el, binding) {
         console.log(binding.value.color);
         console.log(binding.value.text);
     })
