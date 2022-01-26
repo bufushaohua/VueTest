@@ -9,6 +9,7 @@
 <div id="app">
     <anchored-heading :level="4">Hello World!</anchored-heading>
     <anchored-heading1 :level="1">Hello World!</anchored-heading1>
+    <anchored-heading2 :level="1">Hello what!</anchored-heading2>
 </div>
 
 </body>
@@ -62,10 +63,41 @@
         }
     });
 
+    // 使用createElement参数
+    let getChildrenTextContent = function (children) {
+        return children.map(function (node) {
+            return node.children ? getChildrenTextContent(node.children) : node.text
+        }).join('')
+    };
+
+    Vue.component('anchored-heading2', {
+        render: function (createElement) {
+            // 创建kebab-case风格的ID
+            let headingId = getChildrenTextContent(this.$slots.default)
+                .toLowerCase().replace(/\W+/g, '-') .replace(/(^-|-$)/g, '')
+            return createElement('h'+this.level, [
+                createElement('a', {
+                    attrs: {
+                        name: headingId,
+                        href: '#'+ headingId
+                    }
+                }, this.$slots.default)
+            ])
+        },
+        props: {
+            level: {
+                type: Number,
+                required: true
+            }
+        }
+    });
+
     new Vue({
         el: '#app',
-        component: ['anchored-heading', 'anchored-heading1'],
+        component: ['anchored-heading', 'anchored-heading1', 'anchored-heading2'],
     });
+
+
 
 </script>
 
